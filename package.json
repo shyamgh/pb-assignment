@@ -1,0 +1,16 @@
+{
+  "name": "payback-assignment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test-headless": "npx playwright test",
+    "test-headed": "npx playwright test --headed"
+  },
+  "keywords": [],
+  "author": "shyam_hushangabadkar",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.25.1"
+  }
+}
