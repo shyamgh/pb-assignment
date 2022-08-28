@@ -110,4 +110,11 @@ export class PaybackRegistrationPage {
     async verifyPersonalDataDisplayed(salute, fName, lName, day, month, year, street, flr, zip, city, country) {
         // TODO
     }
+
+    verifyFieldAttr(field: Locator, map: Record<string, string>) {
+        var flag: boolean = true
+        for (const key in map) {
+            expect(field).toHaveAttribute(key, map[key]);
+    }
+}
 }

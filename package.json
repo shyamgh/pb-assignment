@@ -4,13 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test-headless": "npx playwright test",
-    "test-headed": "npx playwright test --headed"
+    "test-headless-at": "LOCALE=at npx playwright test",
+    "test-headed-at": "LOCALE=at npx playwright test --headed",
+    "test-headed-it": "LOCALE=it npx playwright test --headed"
   },
   "keywords": [],
   "author": "shyam_hushangabadkar",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.25.1"
+  },
+  "dependencies": {
+    "properties-reader": "^2.2.0"
   }
 }
