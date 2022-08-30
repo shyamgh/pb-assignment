@@ -1,7 +1,11 @@
 ## pb-assignment
 
 Clone this repository to your local machine. \
-Pre-requisite - Node.js, Playwright is setup on local machine. Which is also mentioned in package.json dependency. So expected is playwright is initialized and setup.
+Pre-requisite - Node.js, Playwright is setup on local machine. Which is also mentioned in package.json dependency. So expected is playwright is initialized and setup. \
+
+Once repository is cloned, run below command frm repository directory. \
+
+npm install
 
 ## Command to run new user card registration test:
 
