@@ -9,18 +9,18 @@ const emailCss = "#email";
 const pinCss = "#pin";
 const continueStep2BtnCss = `//div[@data-step='2']//span[text()='${prop.get('continue')}']`;
 const salutationCss = "#salutation";
-const firstNameCss = "#firstName";
-const lastNameCss = "#lastName";
+const firstNameXpath = "//*[@id='firstName']";
+const lastNameXpath = "//*[@id='lastName']";
 const birthdayXpath = `//input[@name='birthday']`;
-const bDayCss = "//div[@class='pb-input-dob__input-wrapper']//input[1]"
-const bMonthCss = "//div[@class='pb-input-dob__input-wrapper']//input[2]"
-const bYearCss = "//div[@class='pb-input-dob__input-wrapper']//input[3]"
-const streetCss = "#street";
-const floorCss = "#floor";
-const houseNoCss = "#houseNumber"
-const zipcodeCss = "#zipCode";
-const cityCss = "#city";
-const countryCss = "#country";
+const bDayXpath = "//div[@class='pb-input-dob__input-wrapper']//input[1]"
+const bMonthXpath = "//div[@class='pb-input-dob__input-wrapper']//input[2]"
+const bYearXpath = "//div[@class='pb-input-dob__input-wrapper']//input[3]"
+const streetXpath = "//*[@id='street']";
+const floorXpath = "//*[@id='floor']";
+const houseNoXpath = "//*[@id='houseNumber']"
+const zipcodeXpath = "//*[@id='zipCode']";
+const cityXpath = "//*[@id='city']";
+const countryXpath = "//*[@id='country']";
 const continueStep3BtnCss = `//div[@data-step='3']//div[contains(text(),'${prop.get('laststep')}')]`;
 const personalDataOverviewBlockCss = "(//*[@id='signup']//div[contains(@class,'pb-sign-up-block-overview')])[3]"
 
@@ -40,18 +40,18 @@ export class PaybackRegistrationPage extends BasePage {
     get pin() { return this.page.locator(pinCss); }
     get continueStep2Btn() { return this.page.locator(continueStep2BtnCss); }
     get salutation() { return this.page.locator(salutationCss); }
-    get firstName() { return this.page.locator(firstNameCss); }
-    get lastName() { return this.page.locator(lastNameCss); }
+    get firstName() { return this.page.locator(firstNameXpath); }
+    get lastName() { return this.page.locator(lastNameXpath); }
     get birthday() { return this.page.locator(birthdayXpath); }
-    get bday() { return this.page.locator(bDayCss); }
-    get bmonth() { return this.page.locator(bMonthCss); }
-    get byear() { return this.page.locator(bYearCss); }
-    get street() { return this.page.locator(streetCss); }
-    get floor() { return this.page.locator(floorCss); }
-    get houseno() { return this.page.locator(houseNoCss); }
-    get zip() { return this.page.locator(zipcodeCss); }
-    get city() { return this.page.locator(cityCss); }
-    get country() { return this.page.locator(countryCss); }
+    get bday() { return this.page.locator(bDayXpath); }
+    get bmonth() { return this.page.locator(bMonthXpath); }
+    get byear() { return this.page.locator(bYearXpath); }
+    get street() { return this.page.locator(streetXpath); }
+    get floor() { return this.page.locator(floorXpath); }
+    get houseno() { return this.page.locator(houseNoXpath); }
+    get zip() { return this.page.locator(zipcodeXpath); }
+    get city() { return this.page.locator(cityXpath); }
+    get country() { return this.page.locator(countryXpath); }
     get continueStep3Btn() { return this.page.locator(continueStep3BtnCss); }
     get personalDataOverviewBlock() { return this.page.locator(personalDataOverviewBlockCss); }
 
@@ -78,7 +78,44 @@ export class PaybackRegistrationPage extends BasePage {
     }
 
     async verifyPersonalDataFields() {
-        // TODO
+ 
+        // verify first name is mandatory text field
+        await this.firstName.fill('');
+        await this.lastName.click();
+        await expect(this.firstName.locator('../following-sibling::div')).toContainText(this.getProperties().get('errmsg1'));
+
+        // verify min and max length for last name
+        await this.lastName.type('a');
+        await this.lastName.press('Tab');
+        await expect(this.lastName.locator('../following-sibling::div')).toBeHidden();
+
+        const inp55 = 'abcdaljsddafafaskdaksdlasdjksdaakshdkjahsdakjsdkasdjasd'
+        await this.lastName.fill('');
+        await this.lastName.type(inp55); // 55 chars
+        await this.lastName.press('Tab');
+        await this.firstName.click();
+
+        let val = await this.lastName.inputValue();
+        await expect(val).toEqual(inp55.substring(0, 50));
+
+        // verify zip code field attributes
+        var attrData = {
+            "data-validation": "",
+            "minlength": "",
+            "maxlength": ""
+        }
+        if (this.getLocale() == 'at') {
+            attrData['data-validation'] = "{\"errorMsg\":\"Bitte geben Sie Ihre PLZ ein\",\"regEx\":\"\\\/^[a-zA-Z0-9 \\\\\-]{1,8}$\\\/\",\"isEnabled\":true}";
+            attrData.maxlength = "8";
+            attrData.minlength = "1"
+        }
+        else if (this.getLocale() == 'it') {
+            attrData['data-validation'] = "{\"errorMsg\":\"Per favore, ricontrolla l'informazione inserita\",\"regEx\":\"\\\/^[0-9]{5}$\\\/\",\"isEnabled\":true}";
+            attrData.maxlength = "5";
+            attrData.minlength = "5"
+        }
+
+        await this.verifyFieldAttr(this.zip, attrData);
     }
 
     async enterPersonalDataAndContinue(salute, fName, lName, day, month, year, street, flr, zip, city, country) {
@@ -127,13 +164,13 @@ export class PaybackRegistrationPage extends BasePage {
             await this.verifyTextContents(personalDataOverviewBlockCss + '/div[8]/div[2]', zip);
             await this.verifyTextContents(personalDataOverviewBlockCss + '/div[10]/div[2]', city);
         }
-        
+
     }
 
-    verifyFieldAttr(field: Locator, map: Record<string, string>) {
+    async verifyFieldAttr(field: Locator, map: Record<string, string>) {
         var flag: boolean = true
         for (const key in map) {
-            expect(field).toHaveAttribute(key, map[key]);
+            await expect(field).toHaveAttribute(key, map[key]);
         }
     }
 }

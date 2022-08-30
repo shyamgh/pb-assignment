@@ -6,7 +6,6 @@ const properties = PropertiesReader('config/' + process.env.LOCALE + '-data.prop
 export class BasePage {
     
     protected page: Page;
-    readonly properties;
     readonly url: string;
     readonly pageTitle: RegExp;
     readonly signInXpath: string;

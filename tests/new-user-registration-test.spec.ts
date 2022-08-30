@@ -7,11 +7,6 @@ test('Payback new user card registration test', async ({ page }) => {
 
     const pageTitle: RegExp = new RegExp('.*PAYBACK.*');
 
-    // const url = 'https://www.payback.at';
-    // const acceptHandlerXpath = '#onetrust-accept-btn-handler';
-    // const signInXpath = "//*[@class='pb-navigation']//li/a[@href='/anmelden']";
-
-
     var testData = {
         'testEmail': 'testemail1@gmail.com',
         'testPin': '1234',
@@ -43,8 +38,10 @@ test('Payback new user card registration test', async ({ page }) => {
     // enter required access data
     await paybackRegistrationPage.enterAccessDataAndContinue(testData.testEmail, testData.testPin);
 
-    // verify and enter personal data
+    // personal data field validation
     await paybackRegistrationPage.verifyPersonalDataFields();
+
+    // enter personal data
     await paybackRegistrationPage.enterPersonalDataAndContinue(testData.salutation, testData.firstName, testData.lastName,
         testData.bday, testData.bmonth, testData.byear,testData.street, testData.floor, testData.zip, testData.city, testData.country);
 
