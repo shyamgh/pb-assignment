@@ -17,3 +17,5 @@ LOCALE=it npx playwright test --headed
 npm run test-headless-at \
 npm run test-headed-at \
 npm run test-headed-it
+
+![image](https://user-images.githubusercontent.com/15071419/187476634-eaef2973-03f8-4dd2-b5a7-12783581156f.png)
