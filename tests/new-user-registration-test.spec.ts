@@ -1,4 +1,5 @@
 import { test, expect, Locator } from '@playwright/test';
+import { BasePage } from '../pages/base-page';
 import { PaybackHomePage } from '../pages/home-page';
 import { PaybackRegistrationPage } from '../pages/registration.page';
 
@@ -14,7 +15,7 @@ test('Payback new user card registration test', async ({ page }) => {
     var testData = {
         'testEmail': 'testemail1@gmail.com',
         'testPin': '1234',
-        'salutation': '2',
+        'salutation': new BasePage().getProperties().get('mr'),
         'firstName': 'testFirstName',
         'lastName': 'testLastName',
         'bday': '01',
@@ -22,7 +23,7 @@ test('Payback new user card registration test', async ({ page }) => {
         'byear': '1885',
         'street': 'testStreet',
         'floor': 'testFloor',
-        'zip': '12345689',
+        'zip': new BasePage().getLocale() == 'at' ? '12345689': '12345',
         'city': 'testCity',
         'country': 'de'
     };
@@ -48,6 +49,10 @@ test('Payback new user card registration test', async ({ page }) => {
         testData.bday, testData.bmonth, testData.byear,testData.street, testData.floor, testData.zip, testData.city, testData.country);
 
     // validate personal data entered is displayed
+    if (testData.country = 'de'){
+        testData.country = 'Deutschland'
+    }
+
     await paybackRegistrationPage.verifyPersonalDataDisplayed(testData.salutation, testData.firstName, testData.lastName,
         testData.bday, testData.bmonth, testData.byear, testData.street, testData.floor, testData.zip, testData.city, testData.country);
 
